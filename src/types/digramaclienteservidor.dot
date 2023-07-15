@@ -1,0 +1,27 @@
+digraph architecture {
+    // Configuración de nodos y conexiones
+    node [shape=box, style="rounded,filled", fillcolor="#E8F4F8", fontname="Arial", fontsize=12];
+    edge [color="#333333", fontname="Arial", fontsize=10];
+
+    // Nodo de la aplicación principal
+    app_principal [label="App Principal", shape="box", style="filled", fillcolor="#FFCA28", fontcolor="#333333"];
+
+    // Nodos de los módulos por rol
+    modulo_medidorista [label="Módulo Medidorista", shape="box", style="filled", fillcolor="#FFCA28", fontcolor="#333333"];
+    modulo_usuario [label="Módulo Usuario", shape="box", style="filled", fillcolor="#FFCA28", fontcolor="#333333"];
+
+    // Nodos del servidor
+    servidor [label="Servidor (API)", shape="box", style="filled", fillcolor="#8BC34A", fontcolor="#333333"];
+    base_datos [label="Base de datos (PostgreSQL)", shape="box", style="filled", fillcolor="#8BC34A", fontcolor="#333333"];
+    orm [label="ORM Prisma", shape="box", style="filled", fillcolor="#B2EBF2", fontcolor="#333333"];
+
+    // Conexiones entre los nodos
+    app_principal -> modulo_medidorista [label="Rol: Medidorista", color="#1E88E5"];
+    app_principal -> modulo_usuario [label="Rol: Usuario", color="#1E88E5"];
+    modulo_medidorista -> servidor [label="Autenticación (Medidorista)", color="#1E88E5"];
+    modulo_usuario -> servidor [label="Autenticación (Usuario)", color="#1E88E5"];
+    servidor -> base_datos [label="Consultas restringidas (Medidorista)", color="#1E88E5"];
+    servidor -> base_datos [label="Consultas consumo agua potable (Usuario)", color="#1E88E5"];
+    servidor -> orm [label="Acceso a la base de datos", color="#1E88E5"];
+    orm -> base_datos [label="Consultas mediante ORM", color="#1E88E5"];
+}

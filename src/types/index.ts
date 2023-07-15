@@ -1,0 +1,1 @@
+//Para tipar recursos compartidos, como session

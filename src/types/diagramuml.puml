@@ -1,0 +1,106 @@
+@startuml
+
+class User {
+  - id: String
+  - name: String
+  - lastname: String
+  - ci: String
+  - password: String
+  - phone: String
+  - role: Role
+  - createAt: DateTime
+  - updateAt: DateTime
+  - penaltyrecord: Penaltyrecord[]
+  - penaltyrecordsocio: Penaltyrecord[]
+  + login(username: String, password: String): boolean
+  + getMeterReadings(): Readmether[]
+  + getUserData(userId: String): User
+}
+
+class Readmether {
+  - id: String
+  - consumom3: Float
+  - totalprice: Decimal
+  - previousreading: Float
+  - currentreading: Float
+  - mouth: String
+  - year: String
+  - paymentdate: DateTime?
+  - readerId: String
+  - readby: User
+  - socioid: String
+  - socio: User
+  - createAt: DateTime
+  - updateAt: DateTime
+  + readMeterWithOCR(image: Image): Readmether
+}
+
+class Parameters {
+  - id: String
+  - name: String
+  - value: Float
+  - createAt: DateTime
+  - updateAt: DateTime
+}
+
+class Penalty {
+  - id: String
+  - name: String
+  - cost: Decimal
+  - description: String?
+  - createAt: DateTime
+  - updateAt: DateTime
+  - penaltyrecord: Penaltyrecord[]
+}
+
+class Penaltyrecord {
+  - id: String
+  - cost: Decimal
+  - description: String?
+  - resgisterbyId: String
+  - paymentDate: DateTime?
+  - resgisterby: User
+  - penaltyId: String
+  - penalty: Penalty
+  - socioId: String
+  - socio: User
+  - createAt: DateTime
+  - updateAt: DateTime
+}
+
+class MobileApp {
+  + scanMeter(): void
+  + authenticateUser(username: String, password: String): boolean
+  + getMeterReadings(): Readmether[]
+}
+
+class WebApp {
+  + manageMeterData(): void
+  + processPayment(): void
+  + calculateConsumption(): void
+}
+
+class MobileModule {
+  + viewMeterData(): void
+}
+
+class OCRService {
+  + extractTextFromImage(image: Image): String
+}
+
+class API {
+  + login(username: String, password: String): boolean
+  + getMeterReadings(userId: String): Readmether[]
+  + getUserData(userId: String): User
+  + captureMeterReading(userId: String, image: Image): Readmether
+  + manageMeterData(): void
+  + processPayment(): void
+  + calculateConsumption(): void
+}
+
+MobileApp --> OCRService
+MobileApp --> API
+WebApp --> API
+MobileModule --> API
+
+@enduml

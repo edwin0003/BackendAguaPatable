@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String          @id @unique @default(uuid())
+  name               String
+  lastname           String
+  ci                 String          @unique
+  password           String
+  phone              String
+  role               Role            @default(Socio)
+  readmetheruser     Readmether[]
+  readmethersocio    Readmether[]    @relation("socio")
+  createAt           DateTime        @default(now())
+  updateAt           DateTime        @updatedAt
+  penaltyrecord      Penaltyrecord[]
+  penaltyrecordsocio Penaltyrecord[] @relation("socio-penalty")
+}
+
+enum Role {
+  Admin
+  Secretaria
+  Lecturador
+  Socio
+}
+
+model Readmether {
+  id              String    @unique @default(uuid())
+  consumom3       Float
+  totalprice      Decimal
+  previousreading Float
+  currentreading  Float
+  mouth           String
+  year            String
+  paymentdate     DateTime?
+  readerId        String
+  readby          User      @relation(fields: [readerId], references: [id])
+  socioid         String
+  socio           User      @relation(name: "socio", fields: [socioid], references: [id])
+  createAt        DateTime  @default(now())
+  updateAt        DateTime  @updatedAt
+}
+
+model Parameters {
+  id       String   @unique @default(uuid())
+  name     String
+  value    Float
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+}
+
+model Penalty {
+  id            String          @unique @default(uuid())
+  name          String
+  cost          Decimal
+  description   String?
+  createAt      DateTime        @default(now())
+  updateAt      DateTime        @updatedAt
+  penaltyrecord Penaltyrecord[]
+}
+
+model Penaltyrecord {
+  id            String    @unique @default(uuid())
+  cost          Decimal
+  description   String?
+  resgisterbyId String
+  paymentDate   DateTime?
+  resgisterby   User      @relation(fields: [resgisterbyId], references: [id])
+  penaltyId     String
+  penalty       Penalty   @relation(fields: [penaltyId], references: [id])
+  socioId       String
+  socio         User      @relation(name: "socio-penalty", fields: [socioId], references: [id])
+  createAt      DateTime  @default(now())
+  updateAt      DateTime  @updatedAt
+}
